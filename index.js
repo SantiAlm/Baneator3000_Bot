@@ -1,31 +1,55 @@
-
 const Telegram = require('telegram-node-bot');
 const TelegramBaseController = Telegram.TelegramBaseController;
 const TextCommand = Telegram.TextCommand;
 const TelegramBot = Telegram.Telegram;
 const ogs = require ('open-graph-scraper');
-// const firebase = require('firebase');
+const firebase = require('firebase');
 
-// const config = require('./config/index');
+const { config } = require('./config/index');
 const pornhub = require('./services/pornhub');
 
+
 const TOKEN = process.env.TOKEN;
+const BOT_BANNED_USERS = config.BOT_BANNED_USERS; //Yo
+const BOT_FILTER_STATE = config.BOT_FILTER;
+debugger
 const bot = new TelegramBot(TOKEN, {
     workers: 1,
-    webAdmin: {
-        port: process.env.PORT
-    }
+    // webAdmin: {
+    //     port: process.env.PORT
+    // }
 });
 
+
+function usageFilter($){
+    const sender_id = $._message._from._id;
+    if(BOT_FILTER_STATE){
+        if(sender_id !== BOT_BANNED_USERS){
+            return true;
+        }else{
+            return false;
+        }
+    }else{
+        return true;
+    }
+}
+
 class PingController extends TelegramBaseController {
+    pingHandlerFilter($){
+        if(!usageFilter($)){
+            $.sendMessage('Det?');
+        }else{
+            this.pingHandler($);
+        }
+    }
+
     pingHandler($) {
         $.sendMessage('pong');
     }
 
-
     get routes() {
         return {
-            'pingCommand': 'pingHandler'
+            'pingCommand': 'pingHandlerFilter'
         }
     }
 }
@@ -42,11 +66,21 @@ class PornhubLinkControler extends TelegramBaseController {
         return scope;
     }
     
+    pornhubLinkHandlerFilter($){
+        if(!usageFilter($)){
+            $.sendMessage('Det?');
+        }else{
+            this.pornhubLinkHandler($);
+        }
+    }
+
     pornhubLinkHandler($) {
         if($.search){
-            $.sendMessage('-No! Coscu no lo hagas!!!\n-No me importa nada frankkaster, ahí lo digo...');
+            $.sendMessage('Buscando...');
             pornhub($.search).then((url) => {
                 $.sendMessage(url);
+            }).catch((err) => {
+                $.sendMessage('No se encontraron resultados... Raro de mierda');
             });
         }else{
             $.sendMessage('Error!\nUsage -> /ndeah [Search]')
@@ -55,10 +89,63 @@ class PornhubLinkControler extends TelegramBaseController {
 
     get routes() {
         return {
-            'pornhubCommand': 'pornhubLinkHandler'
+            'pornhubCommand': 'pornhubLinkHandlerFilter'
         }
     }
 }
+
+
+class VotekickController extends TelegramBaseController {
+    before(scope) {
+        var scopes = scope._message._text.indexOf(' ');
+        var user_ban_id;
+
+        if(scopes !== -1){
+            user_ban_id = scope._message._from._id;
+            scope.user_ban_id = user_ban_id;
+        }
+
+        return scope;
+    }
+    
+    votekickHandlerFilter($){
+        if(!usageFilter($)){
+            $.sendMessage('Det?');
+        }else{
+            this.votekickHandler($);
+        }
+    }
+
+    votekickHandler($) {
+        if($.user_ban_id){
+            $.sendMessage('Adios idiotaaaa!');
+            $.kickChatMember( $.user_ban_id );
+            $.unbanChatMember( $.user_ban_id );
+        }else{
+            $.sendMessage('Error!\nUsage -> /votekick [Victima]');
+        }
+    }
+
+    get routes() {
+        return {
+            'votekickCommand': 'votekickHandlerFilter'
+        }
+    }
+}
+
+
+class RegisterController extends TelegramBaseController{
+    registerHandler($){
+        
+    }
+
+    get routes(){
+        return {
+            'registerCommand': 'registerHandler'
+        }
+    }
+}
+
 
 bot.router
 .when(
@@ -69,5 +156,11 @@ bot.router
     new TextCommand('/ndeah', 'pornhubCommand'),
     new PornhubLinkControler()
 )
-
-
+.when(
+    new TextCommand('/votekick', 'votekickCommand'),
+    new VotekickController()
+)
+.when(
+    new TextCommand('/register', 'registerCommand'),
+    new RegisterController()
+)
