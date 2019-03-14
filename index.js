@@ -12,7 +12,7 @@ const pornhub = require('./services/pornhub');
 const TOKEN = process.env.TOKEN;
 const bot = new TelegramBot(TOKEN, {
     workers: 1,
-    webhook: {
+    webAdmin: {
         port: process.env.PORT
     }
 });
