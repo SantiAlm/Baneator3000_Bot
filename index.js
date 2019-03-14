@@ -11,7 +11,10 @@ const pornhub = require('./services/pornhub');
 
 const TOKEN = process.env.TOKEN;
 const bot = new TelegramBot(TOKEN, {
-    workers: 1
+    workers: 1,
+    webhook: {
+        port: process.env.PORT
+    }
 });
 
 class PingController extends TelegramBaseController {
