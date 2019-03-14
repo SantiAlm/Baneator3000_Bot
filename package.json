@@ -1,0 +1,26 @@
+{
+  "name": "baneator3000_bot",
+  "version": "1.0.0",
+  "description": "Telegram Ban bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "bot",
+    "telegram",
+    "ban"
+  ],
+  "author": "@matias4205",
+  "license": "ISC",
+  "dependencies": {
+    "firebase": "^5.8.6",
+    "node-telegram-bot-api": "^0.30.0",
+    "open-graph-scraper": "^3.6.1",
+    "snekfetch": "^3.1.7",
+    "telegram-node-bot": "^4.0.5"
+  },
+  "devDependencies": {
+    "dotenv": "^7.0.0"
+  }
+}
