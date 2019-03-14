@@ -4,9 +4,9 @@ const TelegramBaseController = Telegram.TelegramBaseController;
 const TextCommand = Telegram.TextCommand;
 const TelegramBot = Telegram.Telegram;
 const ogs = require ('open-graph-scraper');
-const firebase = require('firebase');
+// const firebase = require('firebase');
 
-const config = require('./config/index');
+// const config = require('./config/index');
 const pornhub = require('./services/pornhub');
 
 const TOKEN = process.env.TOKEN;
