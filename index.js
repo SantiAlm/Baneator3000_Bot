@@ -39,7 +39,7 @@ function usageFilter($){
 class PingController extends TelegramBaseController {
     pingHandlerFilter($){
         if(!usageFilter($)){
-            $.sendMessage('Vos no xd');
+            $.sendMessage('NotAuthorized: Solo para 6to xd');
         }else{
             this.pingHandler($);
         }
@@ -70,7 +70,7 @@ class PornhubLinkControler extends TelegramBaseController {
     
     pornhubLinkHandlerFilter($){
         if(!usageFilter($)){
-            $.sendMessage('Vos no xd');
+            $.sendMessage('NotAuthorized: Solo para 6to xd');
         }else{
             this.pornhubLinkHandler($);
         }
@@ -112,7 +112,7 @@ class VotekickController extends TelegramBaseController {
     
     votekickHandlerFilter($){
         if(!usageFilter($)){
-            $.sendMessage('Vos no xd');
+            $.sendMessage('NotAuthorized: Solo para 6to xd');
         }else{
             this.votekickHandler($);
         }
@@ -122,18 +122,20 @@ class VotekickController extends TelegramBaseController {
         if($.user_ban_id){
             $.runMenu({
                 message: 'Votekick @UnBolude',
+                oneTimeKeyboard: true,
                 options: {
                      // in options field you can pass some additional data, like parse_mode
                 },
                 'F1': (data) => {
-                    $.sendMessage('Votaste SI', { reply_markup: JSON.stringify({ remove_keyboard:true, selective: true }) });
+                    console.log(data._message._messageId);
+                    data.sendMessage('Votaste SI', { reply_to_message_id: data._message._messageId });
                 },
                 'F2': (data) => {
-                    $.sendMessage('Votaste NO', { reply_remove: JSON.stringify({ remove_keyboard: true }) });
-                },
-                'anyMatch': () => {
-                    
+                    console.log(data._message._messageId);
+                    data.sendMessage('Votaste NO', { reply_to_message_id: data._message._messageId });
                 }
+            }, (a) => {
+                console.log(a);
             });
             // $.sendMessage('Adios idiotaaaa!');
             // $.kickChatMember( $.user_ban_id );
@@ -165,14 +167,15 @@ class RegisterController extends TelegramBaseController{
 }
 
 class OtherwiseController extends TelegramBaseController{
-    // handle($){
-    //     if($._message._text.indexOf('ja') !== -1){
-    //         $.sendMessage('De que te reis mogolico');
-    //     }else if($._message._text.indexOf('js') !== -1){
-    //         $.sendMessage('Reite bien idiota');
-    //     }
-    // }
+    handle($){
+        if($._message._text.indexOf('ja') !== -1){
+            $.sendMessage('De que te reis mogolico');
+        }else if($._message._text.indexOf('js') !== -1){
+            $.sendMessage('Reite bien idiota');
+        }
+    }
 }
+
 
 bot.router
 .when(
