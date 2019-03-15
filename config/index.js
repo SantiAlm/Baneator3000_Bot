@@ -13,7 +13,8 @@ const firebase_config = {
 const config = {
     "TOKEN": process.env.TOKEN,
     "BOT_FILTER": process.env.BOT_FILTER === 'true',
-    "BOT_BANNED_USERS": parseInt(process.env.BOT_BANNED_USERS)
+    "BOT_BANNED_USERS": parseInt(process.env.BOT_BANNED_USERS),
+    "COOLDOWN_PUTEADAS": parseInt(process.env.COOLDOWN_PUTEADAS)
 }
 
 module.exports =  {config, firebase_config};

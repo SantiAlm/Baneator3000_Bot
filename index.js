@@ -9,10 +9,12 @@ const { config } = require('./config/index');
 const pornhub = require('./services/pornhub');
 
 
-const TOKEN = process.env.TOKEN;
+const TOKEN = config.TOKEN;
 const BOT_BANNED_USERS = config.BOT_BANNED_USERS; //Yo
 const BOT_FILTER_STATE = config.BOT_FILTER;
-debugger
+const COOLDOWN_PUTEADAS = config.COOLDOWN_PUTEADAS;
+
+
 const bot = new TelegramBot(TOKEN, {
     workers: 1,
     // webAdmin: {
@@ -37,7 +39,7 @@ function usageFilter($){
 class PingController extends TelegramBaseController {
     pingHandlerFilter($){
         if(!usageFilter($)){
-            $.sendMessage('Det?');
+            $.sendMessage('Vos no xd');
         }else{
             this.pingHandler($);
         }
@@ -68,7 +70,7 @@ class PornhubLinkControler extends TelegramBaseController {
     
     pornhubLinkHandlerFilter($){
         if(!usageFilter($)){
-            $.sendMessage('Det?');
+            $.sendMessage('Vos no xd');
         }else{
             this.pornhubLinkHandler($);
         }
@@ -110,7 +112,7 @@ class VotekickController extends TelegramBaseController {
     
     votekickHandlerFilter($){
         if(!usageFilter($)){
-            $.sendMessage('Det?');
+            $.sendMessage('Vos no xd');
         }else{
             this.votekickHandler($);
         }
@@ -118,9 +120,24 @@ class VotekickController extends TelegramBaseController {
 
     votekickHandler($) {
         if($.user_ban_id){
-            $.sendMessage('Adios idiotaaaa!');
-            $.kickChatMember( $.user_ban_id );
-            $.unbanChatMember( $.user_ban_id );
+            $.runMenu({
+                message: 'Votekick @UnBolude',
+                options: {
+                     // in options field you can pass some additional data, like parse_mode
+                },
+                'F1': (data) => {
+                    $.sendMessage('Votaste SI', { reply_markup: JSON.stringify({ remove_keyboard:true, selective: true }) });
+                },
+                'F2': (data) => {
+                    $.sendMessage('Votaste NO', { reply_remove: JSON.stringify({ remove_keyboard: true }) });
+                },
+                'anyMatch': () => {
+                    
+                }
+            });
+            // $.sendMessage('Adios idiotaaaa!');
+            // $.kickChatMember( $.user_ban_id );
+            // $.unbanChatMember( $.user_ban_id );
         }else{
             $.sendMessage('Error!\nUsage -> /votekick [Victima]');
         }
@@ -139,6 +156,7 @@ class RegisterController extends TelegramBaseController{
         
     }
 
+
     get routes(){
         return {
             'registerCommand': 'registerHandler'
@@ -146,6 +164,15 @@ class RegisterController extends TelegramBaseController{
     }
 }
 
+class OtherwiseController extends TelegramBaseController{
+    // handle($){
+    //     if($._message._text.indexOf('ja') !== -1){
+    //         $.sendMessage('De que te reis mogolico');
+    //     }else if($._message._text.indexOf('js') !== -1){
+    //         $.sendMessage('Reite bien idiota');
+    //     }
+    // }
+}
 
 bot.router
 .when(
@@ -164,3 +191,4 @@ bot.router
     new TextCommand('/register', 'registerCommand'),
     new RegisterController()
 )
+.otherwise( new OtherwiseController() )
