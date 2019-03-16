@@ -235,7 +235,16 @@ class VotekickController extends TelegramBaseController {
 
 class RegisterController extends TelegramBaseController{
     handle($){
-        usageFilter($, this.registerHandler)
+        const sender_id = $._message._from._id;
+        if(BOT_FILTER_STATE){
+            if(sender_id !== BOT_BANNED_USERS){
+                this.registerHandler($);
+            }else{
+                $.sendMessage('NotAuthorized: Solo para 6to xd');
+            }
+        }else{
+            this.registerHandler($);
+        }
     }
     
     registerHandler($){
