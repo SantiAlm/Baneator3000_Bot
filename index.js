@@ -122,8 +122,6 @@ function makeVote($, messageSenderId, vote){
         POLL_VOTES.push( { messageSenderId,  vote: vote } );
         $.sendMessage(`${messageSenderTag} voted ${vote ? UNICODE_TICK+' F1' : UNICODE_CROSS+' F2'}\nCurrent: ${generatePollStateIcons()}`);
         checkPollState($);
-    }else{
-        $.sendMessage(`${$._message._from._firstName} you are not registered! To use the bot send /register to do it`);
     }
 }
 
@@ -237,6 +235,10 @@ class VotekickController extends TelegramBaseController {
 
 class RegisterController extends TelegramBaseController{
     handle($){
+        usageFilter($, this.registerHandler)
+    }
+    
+    registerHandler($){
         const messageSenderId = $._message._from._id;
         const messageSenderTag = $._message._from._username ? '@' + $._message._from._username : null;
 
@@ -335,23 +337,30 @@ class OtherwiseController extends TelegramBaseController{
         console.log(`Group: ${chalk.yellow($._message._chat._id)} - User: ${chalk.red(messageSenderId)} - Name: ${chalk.green(messageSenderFirstname)}: ${messageText}`); // chat_id + user_id + firstName + text
         
         if(CURRENT_POLL.pollId && messageReplyId === CURRENT_POLL.pollId){
-            if(!checkIfAlreadyVoted(messageSenderId)){
-                switch(messageText){
-                    case UNICODE_TICK + ' F1':
-                        makeVote($, messageSenderId, true);
-                    break;
-                    
-                    case UNICODE_CROSS + ' F2': 
-                        makeVote($, messageSenderId, false);
-                    break;
-                    
-                    default:
-                        $.sendMessage(UNICODE_CROSS+' Invalid Vote!');
-                    break
-                }
-            }else{
-                $.sendMessage(`${getUserTagById(messageSenderId)} you've already voted!`);
+            usageFilter($, this.voteHandler)
+        }
+    }
+
+    voteHandler($){
+        const messageSenderId = $._message._from._id;
+        const messageText = $._message._text;
+    
+        if(!checkIfAlreadyVoted(messageSenderId)){
+            switch(messageText){
+                case UNICODE_TICK + ' F1':
+                    makeVote($, messageSenderId, true);
+                break;
+                
+                case UNICODE_CROSS + ' F2': 
+                    makeVote($, messageSenderId, false);
+                break;
+                
+                default:
+                    $.sendMessage(UNICODE_CROSS+' Invalid Vote!');
+                break
             }
+        }else{
+            $.sendMessage(`${getUserTagById(messageSenderId)} you've already voted!`);
         }
     }
 }
