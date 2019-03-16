@@ -22,7 +22,7 @@ const UNICODE_CLOCK = '\uD83D\uDD52'
 var USERS_ID = require('./utils/moks/users_moks.json');
 var CURRENT_POLL = { pollId: null, userToBeKickedId: null};
 var POLL_VOTES = [];
-
+var POLL_TIMEOUT;
 
 const bot = new TelegramBot(TOKEN, {
     workers: 1,
@@ -32,6 +32,7 @@ const bot = new TelegramBot(TOKEN, {
 });
 
 function resetPoll(){
+    clearTimeout(POLL_TIMEOUT);
     CURRENT_POLL = { pollId: null, userToBeKickedId: null};
     POLL_VOTES = [];
 }
@@ -41,7 +42,7 @@ function generatePollStateIcons(){
 
     for(var x = 0 ; x < MAXIMUM_AMOUNT_OF_VOTES ; x++){
         if(POLL_VOTES[x]){
-            if(POLL_VOTES[x].icons){
+            if(POLL_VOTES[x].vote){
                 icons += UNICODE_TICK + ' '
             }else{
                 icons += UNICODE_CROSS + ' '
@@ -210,9 +211,13 @@ class VotekickController extends TelegramBaseController {
                         "one_time_keyboard": true 
                     })
                 })
-               .then(( { data: { result: { message_id } } } ) => {
-                   CURRENT_POLL.pollId = message_id;
-                   CURRENT_POLL.userToBeKickedId = USERS_ID[$.user_ban_tag];
+                .then(( { data: { result: { message_id } } } ) => {
+                    POLL_TIMEOUT = setTimeout(() => {
+                        $.sendMessage('Timeout! Cancelling kick poll...', { reply_markup: JSON.stringify({ remove_keyboard: true }) });
+                        resetPoll();
+                    }, 60000);
+                    CURRENT_POLL.pollId = message_id;
+                    CURRENT_POLL.userToBeKickedId = USERS_ID[$.user_ban_tag];
                })
             }else{
                 $.sendMessage($.user_ban_tag+' is not registered!');
@@ -244,7 +249,7 @@ class RegisterController extends TelegramBaseController{
                 $.sendMessage(messageSenderTag + ' succesfully registered!');
             })
         }else{
-            $.sendMessage('You need to have an @username to register!');
+            $.sendMessage('You need to have an @username to register! Set it in your configuration');
         }
     }
 }
