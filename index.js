@@ -12,6 +12,7 @@ const RazonController = require('./commands/quientienerazon');
 const VotekickController = require('./commands/votekick');
 const PingController = require('./commands/ping');
 const RegisterController = require('./commands/register');
+const PartyController = require('./commands/partymode');
 
 
 const TOKEN = config.TOKEN;
@@ -47,5 +48,9 @@ bot.router
 .when(
     new TextCommand('/cuantolemide', 'cuantolemideCommand'),
     new CuantoLeMideController()
+)
+.when(
+    new TextCommand('/partymode', 'partyCommand'),
+    new PartyController()
 )
 .otherwise( new OtherwiseController() );
