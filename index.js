@@ -13,6 +13,7 @@ const VotekickController = require('./commands/votekick');
 const PingController = require('./commands/ping');
 const RegisterController = require('./commands/register');
 const PartyController = require('./commands/partymode');
+const ChasquidoController = require('./commands/chasquido');
 
 
 const TOKEN = config.TOKEN;
@@ -52,5 +53,9 @@ bot.router
 .when(
     new TextCommand('/partymode', 'partyCommand'),
     new PartyController()
+)
+.when(
+    new TextCommand('/chasquido', 'chasquidoCommand'),
+    new ChasquidoController()
 )
 .otherwise( new OtherwiseController() );
