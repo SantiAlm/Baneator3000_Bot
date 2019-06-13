@@ -17,9 +17,7 @@
     "axios": "^0.18.0",
     "chalk": "^2.4.2",
     "snekfetch": "^3.1.7",
-    "telegram-node-bot": "^4.0.5"
-  },
-  "devDependencies": {
+    "telegram-node-bot": "^4.0.5",
     "dotenv": "^7.0.0"
   }
 }
