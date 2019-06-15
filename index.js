@@ -14,6 +14,7 @@ const PingController = require('./commands/ping');
 const RegisterController = require('./commands/register');
 const PartyController = require('./commands/partymode');
 const ChasquidoController = require('./commands/chasquido');
+const EventsController = require('./commands/events');
 
 
 const TOKEN = config.TOKEN;
@@ -57,5 +58,9 @@ bot.router
 .when(
     new TextCommand('/chasquido', 'chasquidoCommand'),
     new ChasquidoController()
+)
+.when(
+    new TextCommand('/events', 'eventCommand'),
+    new EventsController()
 )
 .otherwise( new OtherwiseController() );
