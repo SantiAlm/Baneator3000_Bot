@@ -98,7 +98,6 @@ class EventsControler extends TelegramBaseController {
                                 for(let [index, item] of EVENTS_LIST.entries()){
                                     if(item.id === eventId){
                                         EVENTS_LIST.splice(index, 1);
-                                        console.log(EVENTS_LIST);
                                         writeEvents('removed');
                                         break;
                                     }
