@@ -35,19 +35,23 @@ class EventsControler extends TelegramBaseController {
     }
 
     eventsHandler($) {
-        const filterType = (type) => {
-            const filteredList = EVENTS_LIST.filter(item => item.type === type);
+        const buildEventsString = (eventsList, type = 'events') => {
             let builtString = '';
 
-            if(filteredList.length){
-                builtString = filteredList.reduce(( acum, item) => {
+            if(eventsList.length){
+                builtString = eventsList.reduce(( acum, item) => {
                     return acum+`\nId: ${item.id} | Date: ${item.date} | ${item.description}`;
                 }, 'List: \n');
             }else{
                 builtString = `No ${type} found`;
             }
-            
+
             return builtString;
+        }
+
+        const filterType = (type) => {
+            const filteredList = EVENTS_LIST.filter(item => item.type === type);
+            return buildEventsString(filteredList, type);
         }
 
         const writeEvents = (action) => {
@@ -66,7 +70,11 @@ class EventsControler extends TelegramBaseController {
                     const {error: error_list} = joi.validate($.options[1], typeSchema);
 
                     if(!error_list){
-                        $.sendMessage(filterType($.options[1]));
+                        if(!$.options[1]){
+                            $.sendMessage(buildEventsString(EVENTS_LIST));
+                        }else{
+                            $.sendMessage(filterType($.options[1]));
+                        }
                     }else{
                         $.sendMessage('Usage: \n/events list [test, schedule, homework, other]');
                     }
@@ -102,11 +110,10 @@ class EventsControler extends TelegramBaseController {
                                         break;
                                     }
                                 };
-                                
                             }else{
                                 $.sendMessage('Canceled!');
                             }
-                        })
+                        });
                     }else{
                         $.sendMessage('Usage: \n/events remove [Id]');
                     }
