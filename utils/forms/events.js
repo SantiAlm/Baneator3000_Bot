@@ -1,5 +1,5 @@
 const joi = require('joi');
-const { typeSchema, idSchema, dateSchema, descriptionSchema } = require('../schemas/events');
+const { typeSchema, idSchema, dateSchema, descriptionSchema, confirmationSchema } = require('../schemas/events');
 
 const addEventForm = {
     type: {
@@ -46,6 +46,34 @@ const addEventForm = {
     }
 }
 
+const removeEventForm = ( eventObj ) => {
+    const eventString = () => {
+        return eventObj.description;
+    }
+
+    return {
+        removeConfirmation: {
+            q: `Are you sure you want to delete:\n${eventString()}`,
+            error: 'ERROR!\nYes/No',
+            validator: (message, callback) => {
+                const { error } = joi.validate(message.text, confirmationSchema);
+                
+                if(!error){
+                    if(message.text === 'yes'){
+                        callback(true, true);
+                    }else{
+                        callback(true, false)
+                    }
+                    return
+                }
+    
+                callback(false);
+            }
+        }
+    }
+}
+
 module.exports = {
-    addEventForm
+    addEventForm,
+    removeEventForm
 }

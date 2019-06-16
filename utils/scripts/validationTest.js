@@ -1,6 +1,6 @@
-const json = require('./moks/events_moks.json');
+const json = require('../moks/events_moks.json');
 const joi = require('joi');
-const { addSchema } = require('./schemas/events');
+const { addSchema } = require('../schemas/events');
 
 const { error } = joi.validate(json[1], addSchema);
 
