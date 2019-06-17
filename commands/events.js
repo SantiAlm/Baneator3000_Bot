@@ -40,8 +40,8 @@ class EventsControler extends TelegramBaseController {
 
             if(eventsList.length){
                 builtString = eventsList.reduce(( acum, item) => {
-                    return acum+`\nId: ${item.id} | Date: ${item.date} | ${item.description}`;
-                }, 'List: \n');
+                    return acum+`\nId: ${item.id} | Date: ${item.date} | ${item.description}\n`;
+                }, '');
             }else{
                 builtString = `No ${type} found`;
             }
