@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const Telegram = require('telegram-node-bot');
 const TextCommand = Telegram.TextCommand;
 const TelegramBot = Telegram.Telegram;
