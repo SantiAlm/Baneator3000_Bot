@@ -17,6 +17,7 @@ const TelegramBaseController = Telegram.TelegramBaseController;
 const { addEventForm, removeEventForm } = require('../utils/forms/events');
 const EVENTS_LIST = require('../utils/moks/events_moks.json');
 const { typeSchema, idSchema } = require('../utils/schemas/events');
+const orderEventsByDate = require('../utils/orderEventsByDate');
 
 class EventsControler extends TelegramBaseController {
     before(scope) {
@@ -36,11 +37,12 @@ class EventsControler extends TelegramBaseController {
 
     eventsHandler($) {
         const buildEventsString = (eventsList, type = 'events') => {
+            eventsList = orderEventsByDate(eventsList);
             let builtString = '';
 
             if(eventsList.length){
                 builtString = eventsList.reduce(( acum, item) => {
-                    return acum+`\nId: ${item.id} | Date: ${item.date} | ${item.description}\n`;
+                    return acum+`\nId: ${item.id} | Date: ${item.date.day}/${item.date.month} | ${item.description}\n`;
                 }, '');
             }else{
                 builtString = `No ${type} found`;
@@ -83,10 +85,15 @@ class EventsControler extends TelegramBaseController {
                 case 'add':
                     $.runForm(addEventForm, (result) => {
                         const randId = Math.floor((Math.random() * 999) + 1);
+                        const dateArray = result.date.split('/');
                         const eventObj = {
                             id: randId,
                             type: result.type,
-                            date: result.date + `/${new Date().getFullYear()}`,
+                            date: {
+                                day: dateArray[0],
+                                month: dateArray[1],
+                                year: new Date().getFullYear().toString()
+                            },
                             description: result.description
                         };
                         EVENTS_LIST.push(eventObj);
@@ -117,6 +124,10 @@ class EventsControler extends TelegramBaseController {
                     }else{
                         $.sendMessage('Usage: \n/events remove [Id]');
                     }
+                break;
+
+                default:
+                    $.sendMessage('Error!\nOptions: [list, add, remove]');
                 break;
             }
         }else{
