@@ -22,7 +22,7 @@ const EventsController = require('./commands/events');
 const TOKEN = config.TOKEN;
 
 const bot = new TelegramBot(TOKEN, {
-    workers: 2,
+    workers: 1,
     // webAdmin: {
     //     port: process.env.PORT
     // }
