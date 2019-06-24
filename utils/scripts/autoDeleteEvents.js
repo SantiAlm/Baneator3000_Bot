@@ -10,10 +10,8 @@ EVENTS_LIST.forEach((item, index) => {
     }
 });
 
-fs.writeFile(path.resolve(__dirname, '../utils/moks/events_moks.json'), JSON.stringify(INDEXES_EVENTS, null, 4), (err) => {
+fs.writeFile(path.resolve(__dirname, '../moks/events_moks.json'), JSON.stringify(INDEXES_EVENTS, null, 4), (err) => {
     if(err){
-        console.error(err);
-        $.sendMessage('Somethig really bad happened...')
+        throw err;
     }
-    $.sendMessage(`Succesfully ${action}!`);
 });
