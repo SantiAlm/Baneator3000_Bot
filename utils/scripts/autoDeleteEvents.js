@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 
-const EVENTS_LIST = require('./sale.json');
+const EVENTS_LIST = require('../moks/events_moks.json');
 const INDEXES_EVENTS = EVENTS_LIST;
 const TODAY = new Date();
 EVENTS_LIST.forEach((item, index) => {
