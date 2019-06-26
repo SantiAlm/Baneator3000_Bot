@@ -6,7 +6,7 @@ const INDEXES_EVENTS = EVENTS_LIST;
 const TODAY = new Date();
 EVENTS_LIST.forEach((item, index) => {
     if((item.date.day < TODAY.getDate() && item.date.month == TODAY.getMonth()+1) || item.date.month < TODAY.getMonth() || item.date.year < TODAY.getFullYear()){
-        INDEXES_EVENTS.splice(index);
+        INDEXES_EVENTS.splice(index, 1);
     }
 });
 
