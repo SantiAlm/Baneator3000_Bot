@@ -15,16 +15,16 @@ class PabloController extends TelegramBaseController{
         const sender_id = $._message._from._id;
         if(BOT_FILTER_STATE){
             if(sender_id !== BOT_BANNED_USERS){
-                this.registerHandler($);
+                this.pabloHandler($);
             }else{
                 $.sendMessage('NotAuthorized: Solo para 6to xd');
             }
         }else{
-            this.registerHandler($);
+            this.pabloHandler($);
         }
     }
     
-    registerHandler($){
+    pabloHandler($){
         const messageSenderTag = $._message._from._username ? '@' + $._message._from._username : null;
 
         if(messageSenderTag){

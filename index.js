@@ -67,7 +67,7 @@ bot.router
     new EventsController()
 )
 .when(
-    new TextCommand('/pablo', 'PabloController'),
-    new EventsController()
+    new TextCommand('/pablo', 'pabloCommand'),
+    new PabloController()
 )
 .otherwise( new OtherwiseController() );
