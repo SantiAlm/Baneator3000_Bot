@@ -18,7 +18,6 @@ const PartyController = require('./commands/partymode');
 const ChasquidoController = require('./commands/chasquido');
 const EventsController = require('./commands/events');
 
-
 const TOKEN = config.TOKEN;
 
 const bot = new TelegramBot(TOKEN, {
