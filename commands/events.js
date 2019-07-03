@@ -1,21 +1,13 @@
-/* 
-    {
-        "id": "",
-        "type": "",
-        "date": "",
-        "description": ""
-    }
-*/
-
 const fs = require('fs');
 const path = require('path')
 const joi = require('joi');
 const Telegram = require('telegram-node-bot'); 
 const usageFilter = require('../utils/usageFilter');
 const TelegramBaseController = Telegram.TelegramBaseController;
+const { config } = require('../config');
 
+const EVENTS_LIST = require(config.EVENTS_PATH);
 const { addEventForm, removeEventForm } = require('../utils/forms/events');
-const EVENTS_LIST = require('../utils/moks/events_moks.json');
 const { typeSchema, idSchema } = require('../utils/schemas/events');
 const orderEventsByDate = require('../utils/orderEventsByDate');
 
@@ -57,7 +49,7 @@ class EventsControler extends TelegramBaseController {
         }
 
         const writeEvents = (action) => {
-            fs.writeFile(path.resolve(__dirname, '../utils/moks/events_moks.json'), JSON.stringify(EVENTS_LIST, null, 4), (err) => {
+            fs.writeFile(config.EVENTS_PATH, JSON.stringify(EVENTS_LIST, null, 4), (err) => {
                 if(err){
                     console.error(err);
                     $.sendMessage('Somethig really bad happened...')

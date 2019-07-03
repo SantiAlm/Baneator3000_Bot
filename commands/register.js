@@ -2,9 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const Telegram = require('telegram-node-bot');
 const TelegramBaseController = Telegram.TelegramBaseController;
-
-let USERS_ID = require('../utils/moks/users_moks.json');
-const { config } = require('../config/index');
+const { config } = require('../config');
+let USERS_ID = require(config.USERS_PATH);
 
 const BOT_BANNED_USERS = config.BOT_BANNED_USERS; //Longoni
 const BOT_FILTER_STATE = config.BOT_FILTER;
@@ -30,7 +29,7 @@ class RegisterController extends TelegramBaseController{
 
         if(messageSenderTag){
             USERS_ID[messageSenderTag] = messageSenderId
-            fs.writeFile(path.join(__dirname, '../utils/moks/users_moks.json'), JSON.stringify(USERS_ID, null, 4), (err) => {
+            fs.writeFile(config.USERS_PATH, JSON.stringify(USERS_ID, null, 4), (err) => {
                 if(err){
                     console.error(err);
                 }

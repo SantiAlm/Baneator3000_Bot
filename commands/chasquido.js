@@ -2,7 +2,8 @@ const Telegram = require('telegram-node-bot');
 const path = require('path');
 const usageFilter = require('../utils/usageFilter');
 const TelegramBaseController = Telegram.TelegramBaseController;
-const USERS_ID = require('../utils/moks/users_moks.json');
+const { config } = require('../config');
+const USERS_ID = require(config.USERS_PATH);
 
 class ChasquidoController extends TelegramBaseController{
     chasquidoHandlerFilter($){

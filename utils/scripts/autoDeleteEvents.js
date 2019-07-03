@@ -1,7 +1,8 @@
 const path = require('path');
 const fs = require('fs');
+const { config } = require('../../config');
 
-const EVENTS_LIST = require('../moks/events_moks.json');
+const EVENTS_LIST = require(config.EVENTS_PATH);
 const INDEXES_EVENTS = EVENTS_LIST;
 const TODAY = new Date();
 EVENTS_LIST.forEach((item, index) => {
@@ -10,7 +11,7 @@ EVENTS_LIST.forEach((item, index) => {
     }
 });
 
-fs.writeFile(path.resolve(__dirname, '../moks/events_moks.json'), JSON.stringify(INDEXES_EVENTS, null, 4), (err) => {
+fs.writeFile(path.resolve(config.EVENTS_PATH), JSON.stringify(INDEXES_EVENTS, null, 4), (err) => {
     if(err){
         throw err;
     }

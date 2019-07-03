@@ -6,7 +6,7 @@ const { config } = require('../config/index');
 
 const kickPoll = require('../utils/kickPoll');
 const unicodeIcons = require('../utils/unicodeIcons');
-let USERS_ID = require('../utils/moks/users_moks.json');
+let USERS_ID = require(config.USERS_PATH);
 
 class VotekickController extends TelegramBaseController {
     before(scope) {

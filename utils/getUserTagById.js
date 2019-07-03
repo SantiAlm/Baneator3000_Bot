@@ -1,4 +1,5 @@
-let USERS_ID = require('./moks/users_moks.json');
+const { config } = require('../config');
+let USERS_ID = require(config.USERS_PATH);
 
 function getUserTagById(id){
     let userTag = null;
