@@ -1,4 +1,3 @@
-const path = require('path');
 const fs = require('fs');
 const { config } = require('../../config');
 
@@ -11,7 +10,7 @@ EVENTS_LIST.forEach((item, index) => {
     }
 });
 
-fs.writeFile(path.resolve(config.EVENTS_PATH), JSON.stringify(INDEXES_EVENTS, null, 4), (err) => {
+fs.writeFile(config.EVENTS_PATH, JSON.stringify(INDEXES_EVENTS, null, 4), (err) => {
     if(err){
         throw err;
     }
