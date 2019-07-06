@@ -2,8 +2,9 @@ const Telegram = require('telegram-node-bot');
 const usageFilter = require('../utils/usageFilter');
 const TelegramBaseController = Telegram.TelegramBaseController;
 const { recognize } = require('../utils/forms/recognize');
-const axios = require('axios');
-const { config } = require('../config');
+const { rekognition } = require('../services/awsLamdaApi');
+
+const { config: { TOKEN } } = require('../config');
 
 class RecognizeController extends TelegramBaseController{
     before(scope) {
@@ -19,20 +20,12 @@ class RecognizeController extends TelegramBaseController{
     }
 
     recognizeHandlerFilter($){
-        // usageFilter($, this.recognizeHandler);
-        this.recognizeHandler($)
+        usageFilter($, this.recognizeHandler.bind(this));
     }
 
-    getPhotoFile($, _filePath){
-        const url = `https://api.telegram.org/file/bot${config.TOKEN}/${_filePath}`
-        
-        axios.get(`${config.AWS_API_URL}/test?img=${url}`).then(({ data: { data: { Labels: data } } }) => {
-            const labels = data.reduce((final, item, index) => {
-                return final + `${index + 1}- ${item.Name}\n`
-            }, 'This photo has: \n');
-
-            $.sendMessage(labels);
-        });
+    getPhotoLabels($, _filePath){
+        const url = `https://api.telegram.org/file/bot${TOKEN}/${_filePath}`
+        return rekognition($, url);
     }
 
     recognizeHandler($){
@@ -40,9 +33,14 @@ class RecognizeController extends TelegramBaseController{
             const { _fileId } = photoId[photoId.length - 1];
 
             $.api.getFile(_fileId).then(({_filePath}) => {
-                this.getPhotoFile($, _filePath);
+                return this.getPhotoLabels($, _filePath);
+            })
+            .then((labels) => {
+                $.sendMessage(labels);
+            })
+            .catch((err) => {
+                $.sendMessage(err.message);
             });
-
         });
     }
 

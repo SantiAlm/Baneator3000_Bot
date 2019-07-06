@@ -8,7 +8,8 @@ const config = {
     "MAXIMUM_AMOUNT_OF_VOTES": parseInt(process.env.MAXIMUM_AMOUNT_OF_VOTES),
     "EVENTS_PATH": process.env.EVENTS_PATH,
     "USERS_PATH": process.env.USERS_PATH,
-    "AWS_API_URL": process.env.AWS_API_URL
+    "AWS_API_URL": process.env.AWS_API_URL,
+    "AWS_API_STAGE": process.env.AWS_API_STAGE
 }
 
 module.exports =  { config };
