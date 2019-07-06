@@ -17,6 +17,7 @@ const RegisterController = require('./commands/register');
 const PartyController = require('./commands/partymode');
 const ChasquidoController = require('./commands/chasquido');
 const EventsController = require('./commands/events');
+const RecognizeController = require('./commands/recognize');
 
 const TOKEN = config.TOKEN;
 
@@ -63,5 +64,9 @@ bot.router
 .when(
     new TextCommand('/events', 'eventCommand'),
     new EventsController()
+)
+.when(
+    new TextCommand('/recognize', 'recognizeCommand'),
+    new RecognizeController()
 )
 .otherwise( new OtherwiseController() );
